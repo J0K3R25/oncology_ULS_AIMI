@@ -26,7 +26,6 @@ RUN python3.9 -m pip install --no-cache-dir --upgrade pip
 COPY requirements.txt /tmp/requirements.txt
 RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
 
-
 # Configure Git, clone the repository without checking out, then checkout the specific commit
 RUN git config --global advice.detachedHead false && \
     git clone --no-checkout https://github.com/MIC-DKFZ/nnUNet.git /opt/algorithm/nnunet/ && \
