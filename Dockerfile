@@ -6,15 +6,16 @@ RUN rm /etc/apt/sources.list.d/cuda.list
 
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
-  add-apt-repository ppa:deadsnakes/ppa && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   git \
   wget \
+  curl \
   unzip \
   libopenblas-dev \
   python3.10 \
   python3.10-dev \
-  python3.10-distutils \
+  python3.10-venv \
+  python3-distutils \
   nano \
   && \
   apt-get clean autoclean && \
@@ -25,7 +26,7 @@ RUN apt-get update && \
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
 
-# Upgrade pip
+# Bootstrap pip for 3.10
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN python3.10 -m pip install --no-cache-dir --upgrade pip
 
