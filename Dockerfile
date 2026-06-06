@@ -12,19 +12,25 @@ RUN apt-get update && \
   wget \
   unzip \
   libopenblas-dev \
-  python3.9 \
-  python3.9-dev \
-  python3-pip \
+  python3.10 \
+  python3.10-dev \
+  python3.10-distutils \
   nano \
   && \
   apt-get clean autoclean && \
   apt-get autoremove -y && \
   rm -rf /var/lib/apt/lists/*
 
+# Set python3.10 as default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+
 # Upgrade pip
-RUN python3.9 -m pip install --no-cache-dir --upgrade pip
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
+RUN python3.10 -m pip install --no-cache-dir --upgrade pip
+
 COPY requirements.txt /tmp/requirements.txt
-RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+RUN python3.10 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
 
 # Configure Git, clone the repository without checking out, then checkout the specific commit
 RUN git config --global advice.detachedHead false && \
@@ -74,4 +80,4 @@ ENV nnUNet_raw="/opt/algorithm/nnunet/nnUNet_raw" \
     nnUNet_preprocessed="/opt/algorithm/nnunet/nnUNet_preprocessed" \
     nnUNet_results="/opt/algorithm/nnunet/nnUNet_results"
 
-ENTRYPOINT [ "python3.9", "-m", "process" ]
+ENTRYPOINT [ "python3.10", "-m", "process" ]
