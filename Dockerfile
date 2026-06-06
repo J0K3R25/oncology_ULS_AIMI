@@ -6,41 +6,34 @@ RUN rm /etc/apt/sources.list.d/cuda.list
 
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
+  add-apt-repository ppa:deadsnakes/ppa && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   git \
   wget \
-  curl \
   unzip \
   libopenblas-dev \
-  python3.10 \
-  python3.10-dev \
-  python3.10-venv \
-  python3-distutils \
+  python3.9 \
+  python3.9-dev \
+  python3-pip \
   nano \
   && \
   apt-get clean autoclean && \
   apt-get autoremove -y && \
   rm -rf /var/lib/apt/lists/*
 
-# Set python3.10 as default
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
-
-# Bootstrap pip for 3.10
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
-RUN python3.10 -m pip install --no-cache-dir --upgrade pip
-
+# Upgrade pip
+RUN python3.9 -m pip install --no-cache-dir --upgrade pip
 COPY requirements.txt /tmp/requirements.txt
-RUN python3.10 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
 
 # Configure Git, clone the repository without checking out, then checkout the specific commit
 RUN git config --global advice.detachedHead false && \
     git clone --no-checkout https://github.com/MIC-DKFZ/nnUNet.git /opt/algorithm/nnunet/ && \
     cd /opt/algorithm/nnunet/ && \
-    git checkout v2.7.0
+    git checkout v2.7
 
 # Install a few dependencies that are not automatically installed
-RUN pip3 install --no-deps \
+RUN pip3 install \
         -e /opt/algorithm/nnunet \
         graphviz \
         onnx \
@@ -81,4 +74,4 @@ ENV nnUNet_raw="/opt/algorithm/nnunet/nnUNet_raw" \
     nnUNet_preprocessed="/opt/algorithm/nnunet/nnUNet_preprocessed" \
     nnUNet_results="/opt/algorithm/nnunet/nnUNet_results"
 
-ENTRYPOINT [ "python3.10", "-m", "process" ]
+ENTRYPOINT [ "python3.9", "-m", "process" ]
