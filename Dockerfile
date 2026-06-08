@@ -24,7 +24,9 @@ RUN apt-get update && \
 # Upgrade pip
 RUN python3.9 -m pip install --no-cache-dir --upgrade pip
 COPY requirements.txt /tmp/requirements.txt
-RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+
+RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html && \
+    python3.9 -m pip install --no-cache-dir --no-deps nnunetv2==2.5.2
 
 # Configure Git, clone the repository without checking out, then checkout the specific commit
 RUN git config --global advice.detachedHead false && \
