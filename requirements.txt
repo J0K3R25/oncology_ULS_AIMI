@@ -9,4 +9,5 @@ batchgenerators>=0.25
 blosc2==2.5.1
 acvl_utils==0.2
 torch==2.5.1
+dicom2nifti==2.4.11
 nnunetv2==2.5.2
