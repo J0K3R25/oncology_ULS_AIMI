@@ -30,7 +30,7 @@ RUN python3.9 -m pip install --no-cache-dir -r /tmp/requirements.txt -f https://
 RUN git config --global advice.detachedHead false && \
     git clone --no-checkout https://github.com/MIC-DKFZ/nnUNet.git /opt/algorithm/nnunet/ && \
     cd /opt/algorithm/nnunet/ && \
-    git checkout v2.7
+    git checkout v2.5.2
 
 # Install a few dependencies that are not automatically installed
 RUN pip3 install \
