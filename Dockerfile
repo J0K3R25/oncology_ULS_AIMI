@@ -36,6 +36,7 @@ RUN git config --global advice.detachedHead false && \
 
 # Install a few dependencies that are not automatically installed
 RUN pip3 install \
+        --no-deps \
         -e /opt/algorithm/nnunet \
         graphviz \
         onnx \
